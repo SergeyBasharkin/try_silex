@@ -1,0 +1,9 @@
+{% extends 'base.twig' %}
+{% block content %}
+
+    <form action="/login" method="post">
+        <input name="login" title="login" type="text">
+        <input name="password" title="password" type="password">
+        <input type="submit">
+    </form>
+{% endblock %}

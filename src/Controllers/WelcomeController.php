@@ -6,21 +6,31 @@
  * Date: 15.06.17
  * Time: 21:37
  */
+
 namespace Controllers;
 
+use Doctrine\DBAL\Query\QueryBuilder;
+use Services\Impls\WelcomeService;
 use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
 
 class WelcomeController
 {
-    protected $app;
+    private $welcomeService;
 
-    public function __construct(Application $app)
+    public function __construct(WelcomeService $welcomeService)
     {
-        $this->app = $app;
+        $this->welcomeService=$welcomeService;
     }
 
-    public function welcome(){
-        return $this->app["twig"]->render("welcome.twig");
+
+    public function welcome(Application $app, Request $request)
+    {
+        /** @var  $queryBuilder QueryBuilder*/
+
+        return $app["twig"]->render("welcome.twig", array(
+            "test" => $this->welcomeService->welcome()
+        ));
     }
 
 
