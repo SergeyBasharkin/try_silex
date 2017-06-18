@@ -26,10 +26,12 @@ class WelcomeController
 
     public function welcome(Application $app, Request $request)
     {
-        /** @var  $queryBuilder QueryBuilder*/
+        $session = $app["session"];
+
 
         return $app["twig"]->render("welcome.twig", array(
-            "test" => $this->welcomeService->welcome()
+            "test" => $session->get("user"),
+
         ));
     }
 

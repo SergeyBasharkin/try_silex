@@ -2,12 +2,14 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 use Controllers\LoginController;
+use Controllers\RegistrationController;
 use Controllers\WelcomeController;
 use Dotenv\Dotenv;
 use Providers\RepositoryProvider;
 use Providers\ServicesProvider;
 use Silex\Provider\AssetServiceProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
+use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\VarDumperServiceProvider;
 
 $dotenv = new Dotenv(__DIR__);
@@ -40,6 +42,7 @@ $app->register(new VarDumperServiceProvider());
 $app->register(new ServiceControllerServiceProvider());
 $app->register(new RepositoryProvider());
 $app->register(new ServicesProvider());
+$app->register(new SessionServiceProvider());
 
 
 $app['welcome.controller'] = function() use ($app) {
@@ -50,9 +53,15 @@ $app['login.controller'] = function() use ($app) {
     return new LoginController($app['services.user']);
 };
 
+$app['registration.controller'] = function () use ($app){
+    return new RegistrationController($app['services.user']);
+};
+
 $app->get('/', 'welcome.controller:welcome');
 $app->post('/login', 'login.controller:login');
 $app->get('/login', 'login.controller:login_get');
+$app->get('/registration', "registration.controller:registration_get");
+$app->post('/registration', "registration.controller:registration_post");
 
 $app['debug'] = true;
 

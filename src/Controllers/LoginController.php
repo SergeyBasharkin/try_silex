@@ -10,9 +10,11 @@ namespace Controllers;
 
 
 use Doctrine\DBAL\Query\QueryBuilder;
+use Models\User;
 use Services\Impls\UserService;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class LoginController
 {
@@ -24,19 +26,44 @@ class LoginController
 
     public function __construct(UserService $userService)
     {
-        $this->userService=$userService;
+        $this->userService = $userService;
     }
 
 
-    public function login_get(Application $app){
-        return $app["twig"]->render("login.twig",array());
+    public function login_get(Application $app)
+    {
+        return $app["twig"]->render("login.twig", array());
     }
 
-    public function login(Application $app, Request $request){
-        $res = $this->userService->load_user_by_username($request->get("login"));
-        dump($res);
+    public function login(Application $app, Request $request)
+    {
+        /** @var string $login */
+        $login = $request->get("login");
+
+        /** @var string $password */
+        $password = $request->get("password");
+
+        /** @var User $user */
+        $user = $this->userService->load_user_by_username($login);
+
+        $errors = [];
+        if ($user === null) {
+            $errors[] = "user not found";
+        } elseif ($login !== $user->getEmail() && $password!== $user->getPassword()) {
+            $errors[] = "bad credentials";
+        }
+
+        if (empty($errors)) {
+
+            /** @var Session $session */
+            $session = $app["session"];
+            $session->set("user", $user);
+
+            return $app->redirect('/posts');
+        }
+
         return $app["twig"]->render("login.twig", array(
-            "req"=>"1"
+            "errors" => $errors
         ));
     }
 

@@ -9,6 +9,7 @@
 namespace Repositories\Impls;
 
 
+use Models\User;
 use Repositories\Repository;
 
 class UserRepository extends Repository
@@ -19,13 +20,14 @@ class UserRepository extends Repository
 
     }
 
-    public function load_user_by_username($username){
+    public function load_user_by_username($username)
+    {
         $queryBuilder = $this->connect->createQueryBuilder();
 
         $stm = $queryBuilder
             ->select('*')
             ->from("users")
-            ->where('name = ?')
+            ->where('email = ?')
             ->setParameter(0, $username);
 
         return $stm->execute()->fetch();
@@ -34,5 +36,24 @@ class UserRepository extends Repository
     public function getBy($column)
     {
         // TODO: Implement getBy() method.
+    }
+
+    public function saveUser(User $user)
+    {
+        $queryBuilder = $this->connect->createQueryBuilder();
+
+        $stm = $queryBuilder
+            ->insert('users')
+            ->values(
+                array(
+                    'email' => '?',
+                    'password' => '?',
+                    'avatar' => '?'
+                )
+            )
+            ->setParameter(0, $user->getEmail())
+            ->setParameter(1, $user->getPassword())
+            ->setParameter(2, $user->getAvatar());
+        return $result = $stm->execute();
     }
 }

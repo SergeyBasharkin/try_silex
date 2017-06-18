@@ -1,0 +1,11 @@
+{% extends "base.twig" %}
+{% block content %}
+    {{ dump(result) }}
+    <form action="/registration" method="post" enctype="multipart/form-data">
+        <input name="email" type="email" placeholder="email">
+        <input name="password" type="password" placeholder="pass">
+        <input name="confirm_password" type="password" placeholder="confirm pass">
+        <input name="file" type="file" title="avatar">
+        <input type="submit">
+    </form>
+{% endblock %}
