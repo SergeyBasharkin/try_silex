@@ -1,4 +1,81 @@
 {% extends "base.twig" %}
+{% macro recursiveCategory(comment) %}
+    {% import _self as macros %}
+
+    <li class="collection-item">
+        <h4>{{ comment.id }}</h4>
+
+        {% if comment.comments|length %}
+            <ul class="collection with-header">
+                {% for child in comment.comments %}
+                    {{ macros.recursiveCategory(child) }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}
+
+{% import _self as macros %}
 {% block content %}
-    {{ dump(post) }}
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-title">
+                        {{ post.title }}
+                    </div>
+                    {% if post.image == null %}
+                        <img src="/upload/index.png">
+                    {% else %}
+                        <img src="/upload/{{ asset(post.image) }}">
+                    {% endif %}
+                    <div class="content">
+                        {{ post.body }}
+                    </div>
+                </div>
+                <div class="card-action">
+                    <a href="/posts/users/{{ post.user.id }}"> {{ post.user.email }}</a>
+                    <span class="right"> {{ post.createdAt }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+
+            <div class="card">
+                {% if comments %}
+                    <ul class="collection with-header">
+                        {% for comment in comments %}
+                            {{ macros.recursiveCategory(comment) }}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <form action="/posts/{{ post.id }}/comments" method="post" class="col m12 s12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea name="body" id="textarea1" class="materialize-textarea"></textarea>
+                            <label for="textarea1">Textarea</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input type="submit" class="waves-effect waves-light btn">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 {% endblock %}

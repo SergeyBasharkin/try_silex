@@ -19,6 +19,10 @@ class Post
 
     private $createdAt;
 
+    private $image;
+
+    private $comments;
+
     /** @var  $user User */
     private $user;
 
@@ -100,6 +104,38 @@ class Post
     public function setUser(User $user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param mixed $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param mixed $comments
+     */
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
     }
 
 

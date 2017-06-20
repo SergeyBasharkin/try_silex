@@ -29,18 +29,19 @@ class FormValidator
             $errors[] = "email invalid";
         }
 
-        if ($request->files->get("file")->getSize() > 20000000) {
+        if ($request->files->get("file") != null && $request->files->get("file")->getSize() > 20000000) {
             $errors[] = "file error";
         }
 
         return $errors;
     }
 
-    public function validateLoginForm(User $user, Request $request){
+    public function validateLoginForm(User $user, Request $request)
+    {
         $errors = [];
         if ($user === null) {
             $errors[] = "user not found";
-        } elseif ($request->get('login') !== $user->getEmail() && !password_verify($request->getPassword(),$user->getPassword())) {
+        } elseif ($request->get('login') !== $user->getEmail() && !password_verify($request->getPassword(), $user->getPassword())) {
             $errors[] = "bad credentials";
         }
         return $errors;

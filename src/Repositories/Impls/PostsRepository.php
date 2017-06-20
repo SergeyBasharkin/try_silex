@@ -71,15 +71,43 @@ class PostsRepository extends Repository
                 array(
                     'title' => '?',
                     'body' => '?',
-                    'created_at' =>'?',
-                    'user_id' => '?'
+                    'created_at' => '?',
+                    'user_id' => '?',
+                    'image' => '?'
                 ))
             ->setParameter(0, $post->getTitle())
             ->setParameter(1, $post->getBody())
             ->setParameter(2, $post->getCreatedAt())
-            ->setParameter(3, $post->getUser()->getId());
+            ->setParameter(3, $post->getUser()->getId())
+            ->setParameter(4, $post->getImage());
         $stm->execute();
 
         return $this->connect->lastInsertId();
+    }
+
+    public function getPostsByUserId($user_id, int $offset, int $limit)
+    {
+        $builder = $this->connect->createQueryBuilder();
+
+        $stm = $builder
+            ->select('p.*, u.id as user_id, u.email, u.avatar')
+            ->from('posts', 'p')
+            ->join('p', 'users', 'u', 'p.user_id = u.id')
+            ->where('p.user_id = ?')
+            ->orderBy('created_at')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->setParameter(0, $user_id);
+
+        return $stm->execute()->fetchAll();
+    }
+
+    public function getPostsByUserIdSize(int $user_id)
+    {
+        $sql = "SELECT count(id) FROM posts WHERE user_id = :user_id";
+        $stmt = $this->connect->prepare($sql);
+        $stmt->bindParam('user_id', $user_id);
+        $stmt->execute();
+        return $stmt->fetch();
     }
 }

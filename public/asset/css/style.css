@@ -2,6 +2,24 @@
     color: red;
 }
 
-h1{
-    color: red;
+
+.post{
+    color: #323232;
+}
+
+.card-title{
+    color: #323232 !important;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.paging {
+    bottom: 0 !important;
+}
+.chip-wrapper{
+    padding-top: 25px !important;
 }

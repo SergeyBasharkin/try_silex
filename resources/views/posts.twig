@@ -1,6 +1,56 @@
 {% extends "base.twig" %}
 {% block content %}
-    {{ dump(posts) }}
-    {{ dump(count) }}
-    {{ dump(pages) }}
+    <div class="container">
+        <div class="chip-wrapper">
+            <div class="chip">
+                {{ count }}
+            </div>
+        </div>
+        <div class="row">
+            {% for post in posts %}
+                <div class="col s12 m4">
+                    <a href="/posts/{{ post.id }}" class="post">
+                        <div class="card hoverable">
+                            <div class="card-image">
+                                {% if post.image == null %}
+                                    <img src="/upload/index.png">
+                                {% else %}
+                                    <img src="/upload/{{ asset(post.image) }}">
+                                {% endif %}
+                                <span class="card-title">{{ post.title }}</span>
+                            </div>
+                            <div class="card-content">
+                                <p class="truncate">{{ post.body }}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row paging fixed">
+            <div class="col offset-m4">
+
+                <ul class="pagination">
+                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                    {% for page in 1..pages %}
+                        <li {% if page == current_page %} class="active" {% endif %}>{% if users_post %} <a
+                                    href="/posts/users/{{ global.request.attributes.get("user_id") }}?page={{ page }}">{{ page }}</a> {% else %}
+                                <a href="/posts?page={{ page }}">{{ page }}</a> {% endif %}</li>
+                    {% endfor %}
+                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                </ul>
+
+            </div>
+        </div>
+        {% if global.session.get('user') != null %}
+            <div class="fixed-action-btn">
+                <a href="/post" class="btn-floating waves-effect btn-large red right">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+
+
 {% endblock %}

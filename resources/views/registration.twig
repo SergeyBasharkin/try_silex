@@ -1,12 +1,48 @@
 {% extends "base.twig" %}
 {% block content %}
-    {{ dump(result) }}
-    {{ dump(errors) }}
-    <form action="/registration" method="post" enctype="multipart/form-data">
-        <input name="email" type="email" placeholder="email">
-        <input name="password" type="password" placeholder="pass">
-        <input name="confirm_password" type="password" placeholder="confirm pass">
-        <input name="file" type="file" title="avatar">
-        <input type="submit">
-    </form>
+
+    <div class="row">
+        <form action="/registration" method="post" enctype="multipart/form-data" class="col offset-m3 m6 s12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input name="email" id="email" type="email" class="validate">
+                            <label for="email">Email</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input name="password" id="password" type="password" class="validate">
+                            <label for="password">Password</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input name="confirm_password" id="conf_password" type="password" class="validate">
+                            <label for="conf_password">Password</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="file-field input-field">
+                            <div class="btn">
+                                <span>File</span>
+                                <input type="file">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input type="submit" class="waves-effect waves-light btn">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 {% endblock %}

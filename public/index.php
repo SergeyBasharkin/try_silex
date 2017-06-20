@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
+use Controllers\CommentsController;
 use Controllers\LoginController;
 use Controllers\PostsController;
 use Controllers\RegistrationController;
@@ -65,6 +66,9 @@ $app['registration.controller'] = function () use ($app) {
 $app['posts.controller'] = function () use ($app) {
     return new PostsController($app['services.posts']);
 };
+$app['comments.controller'] = function () use ($app) {
+    return new CommentsController($app['services.comments']);
+};
 
 $app->get('/', 'welcome.controller:welcome');
 
@@ -77,14 +81,16 @@ $app->post('/registration', "registration.controller:registration_post");
 
 $app->get('/posts', 'posts.controller:get_all_posts');
 $app->get('/posts/{id}', 'posts.controller:get_post');
+$app->get('/posts/users/{user_id}', 'posts.controller:get_user_posts');
 $app->post('/post', 'posts.controller:post_post')->before(
     function () use ($app) {
         if ($app['session']->get('user') === null) {
             return new Response('Unauthorized', 401);
-}
+        }
     }
 );
 $app->get('/post', 'posts.controller:show_post_form');
+$app->post('/posts/{post_id}/comments', 'comments.controller:add_comment');
 
 $app['debug'] = true;
 

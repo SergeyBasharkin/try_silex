@@ -11,6 +11,7 @@ namespace Providers;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Repositories\Impls\CommentsRepository;
 use Repositories\Impls\PostsRepository;
 use Repositories\Impls\UserRepository;
 use Repositories\Impls\WelcomeRepository;
@@ -39,6 +40,9 @@ class RepositoryProvider implements ServiceProviderInterface
 
         $app["repositories.posts"] = function () use ($app) {
             return new PostsRepository($app["db"]);
+        };
+        $app["repositories.comments"] = function () use ($app) {
+            return new CommentsRepository($app["db"]);
         };
     }
 }
