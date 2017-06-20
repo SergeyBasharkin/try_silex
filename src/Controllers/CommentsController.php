@@ -35,10 +35,15 @@ class CommentsController
         $comment = new Comment();
 
         $comment->setBody($app->escape($request->get('body')));
-        $comment->setPostId($request->attributes->get('post_id'));
-        $comment->setUserId($app['session']->get('user')->getId());
-        $comment->setParentId($request->get('parent_id'));
+        $comment->setPostId((int)$request->attributes->get('post_id'));
+        $comment->setUser((int)$app['session']->get('user')->getId());
+        $comment->setCreatedAt(date('Y-m-d G:i:s', time()));
+        $parent_id = (int)$request->get('parent_id');
+        if ($parent_id===0) $parent_id =null;
+        $comment->setParentId($parent_id);
 
         $this->commentsService->save($comment);
+
+        return $app->redirect('/posts/'.$request->attributes->get('post_id'));
     }
 }

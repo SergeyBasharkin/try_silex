@@ -40,6 +40,8 @@ class LoginController
         /** @var Session $session */
         $session = $app["session"];
         $session->remove("user");
+        $app["twig"]->render("login.twig", array());
+
     }
     public function login(Application $app, Request $request)
     {
@@ -50,7 +52,6 @@ class LoginController
 
         /** @var User $user */
         $user = $this->userService->load_user_by_username($request->get('login'));
-        dump($user);
 
         $errors = $validator->validateLoginForm($user, $request);
         if (empty($errors)) {

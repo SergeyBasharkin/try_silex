@@ -1,13 +1,17 @@
-.test{
+.test {
     color: red;
 }
 
-
-.post{
+.post {
     color: #323232;
 }
 
 .card-title{
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.card-title {
     color: #323232 !important;
 }
 
@@ -20,6 +24,7 @@ body {
 .paging {
     bottom: 0 !important;
 }
-.chip-wrapper{
+
+.chip-wrapper {
     padding-top: 25px !important;
 }

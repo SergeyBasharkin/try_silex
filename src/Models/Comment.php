@@ -17,7 +17,7 @@ class Comment
 
     private $parent_id;
 
-    private $user_id;
+    private $user;
 
     private $post_id;
 
@@ -79,17 +79,17 @@ class Comment
     /**
      * @return mixed
      */
-    public function getUserId()
+    public function getUser()
     {
-        return $this->user_id;
+        return $this->user;
     }
 
     /**
      * @param mixed $user_id
      */
-    public function setUserId($user_id)
+    public function setUser($user)
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
     }
 
     /**

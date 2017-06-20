@@ -10,7 +10,7 @@
             {% for post in posts %}
                 <div class="col s12 m4">
                     <a href="/posts/{{ post.id }}" class="post">
-                        <div class="card hoverable">
+                        <div class="card hoverable medium">
                             <div class="card-image">
                                 {% if post.image == null %}
                                     <img src="/upload/index.png">
@@ -20,28 +20,34 @@
                                 <span class="card-title">{{ post.title }}</span>
                             </div>
                             <div class="card-content">
-                                <p class="truncate">{{ post.body }}</p>
+                                <p class="truncate">
+                                    {% autoescape %}
+                                        {{ post.body|raw }}
+                                    {% endautoescape %}
+                                </p>
                             </div>
                         </div>
                     </a>
                 </div>
             {% endfor %}
         </div>
-        <div class="row paging fixed">
-            <div class="col offset-m4">
+        {% if pages > 1 %}
+            <div class="row paging fixed">
+                <div class="col offset-m4">
 
-                <ul class="pagination">
-                    <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                    {% for page in 1..pages %}
-                        <li {% if page == current_page %} class="active" {% endif %}>{% if users_post %} <a
-                                    href="/posts/users/{{ global.request.attributes.get("user_id") }}?page={{ page }}">{{ page }}</a> {% else %}
-                                <a href="/posts?page={{ page }}">{{ page }}</a> {% endif %}</li>
-                    {% endfor %}
-                    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                </ul>
+                    <ul class="pagination">
+                        <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                        {% for page in 1..pages %}
+                            <li {% if page == current_page %} class="active" {% endif %}>{% if users_post %} <a
+                                        href="/posts/users/{{ global.request.attributes.get("user_id") }}?page={{ page }}">{{ page }}</a> {% else %}
+                                    <a href="/?page={{ page }}">{{ page }}</a> {% endif %}</li>
+                        {% endfor %}
+                        <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                    </ul>
 
+                </div>
             </div>
-        </div>
+        {% endif %}
         {% if global.session.get('user') != null %}
             <div class="fixed-action-btn">
                 <a href="/post" class="btn-floating waves-effect btn-large red right">

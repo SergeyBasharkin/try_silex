@@ -70,7 +70,6 @@ $app['comments.controller'] = function () use ($app) {
     return new CommentsController($app['services.comments']);
 };
 
-$app->get('/', 'welcome.controller:welcome');
 
 $app->post('/login', 'login.controller:login');
 $app->get('/login', 'login.controller:login_get');
@@ -79,19 +78,30 @@ $app->get('/logout', 'login.controller:logout');
 $app->get('/registration', "registration.controller:registration_get");
 $app->post('/registration', "registration.controller:registration_post");
 
-$app->get('/posts', 'posts.controller:get_all_posts');
+$app->get('/', 'posts.controller:get_all_posts');
 $app->get('/posts/{id}', 'posts.controller:get_post');
 $app->get('/posts/users/{user_id}', 'posts.controller:get_user_posts');
 $app->post('/post', 'posts.controller:post_post')->before(
     function () use ($app) {
         if ($app['session']->get('user') === null) {
-            return new Response('Unauthorized', 401);
+            return $app->redirect('/login');
         }
     }
 );
-$app->get('/post', 'posts.controller:show_post_form');
-$app->post('/posts/{post_id}/comments', 'comments.controller:add_comment');
-
+$app->get('/post', 'posts.controller:show_post_form')->before(
+    function () use ($app) {
+        if ($app['session']->get('user') === null) {
+            return $app->redirect('/login');
+        }
+    }
+);
+$app->post('/posts/{post_id}/comments', 'comments.controller:add_comment')->before(
+    function () use ($app) {
+        if ($app['session']->get('user') === null) {
+            return $app->redirect('/login');
+        }
+    }
+);
 $app['debug'] = true;
 
 

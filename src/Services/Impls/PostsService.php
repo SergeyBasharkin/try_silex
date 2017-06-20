@@ -95,10 +95,11 @@ class PostsService extends Service
     {
         /** @var PostsRepository $rep */
         $rep = $this->defaultRepository;
-
-        $filePath = uniqid() . "_" . $post->getImage()->getClientOriginalName();
-        if ($post->getImage()->move(__DIR__ . '/../../../public/upload', $filePath)) {
-            $post->setImage($filePath);
+        if ($post->getImage() !== null) {
+            $filePath = uniqid() . "_" . $post->getImage()->getClientOriginalName();
+            if ($post->getImage()->move(__DIR__ . '/../../../public/upload', $filePath)) {
+                $post->setImage($filePath);
+            }
         }
 
         return $rep->savePost($post);

@@ -12,6 +12,7 @@ namespace Controllers;
 use Exception;
 use Models\Comment;
 use Models\Post;
+use Services\Impls\CommentsService;
 use Services\Impls\PostsService;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,14 +28,21 @@ class PostsController
      */
     private $postsService;
 
+    /**
+     * @var $commentsService CommentsService
+     */
+    private $commentsService;
+
     public function __construct($postsService)
     {
         $this->postsService = $postsService;
+
     }
 
 
     public function get_all_posts(Application $app, Request $request)
     {
+
         $page = (int)$request->get('page');
 
         if ($page < 1) $page = 1;
@@ -47,7 +55,7 @@ class PostsController
         return $app['twig']->render('posts.twig', array(
             'posts' => $posts,
             'count' => $count,
-            'pages' => $pages - 1,
+            'pages' => $pages,
             'users_post' => false,
             'current_page' => $page
         ));
@@ -55,34 +63,15 @@ class PostsController
 
     public function get_post(Application $app, Request $request)
     {
+        $this->commentsService = $app['services.comments'];
 
         $id = (int)$request->attributes->get("id");
         if ($id === 0) return new Response('bad request', 400);
 
         $post = $this->postsService->getPostById($id);
 
-        $comments = [];
-
-        $comment = new Comment();
-
-        $comment1 =new Comment();
-        $comment1->setId(1);
-
-        $comment2 =new Comment();
-        $comment2->setId(2);
-
-        $comment3 =new Comment();
-        $comment3->setId(3);
-
-        $comment4 =new Comment();
-        $comment4->setId(4);
-
-        $comment3->setComments(array($comment4));
-
-        $comment->setId(0);
-        $comment->setComments(array($comment1, $comment2, $comment3));
-
-        $comments[] =$comment;
+        $comments = $this->commentsService->getAllCommentsByPost($id);
+        dump($comments);
 
         return $app['twig']->render('post.twig', array(
             "post" => $post,
@@ -98,20 +87,21 @@ class PostsController
         /** @var Session $session */
         $session = $app['session'];
         $errors = $validator->validatePostForm($request);
+        if (empty($errors)) {
 
-        $post = new Post();
+            $post = new Post();
 
-        $post->setTitle($request->get('title'));
-        $post->setBody($request->get('body'));
-        $post->setCreatedAt(date('Y-m-d G:i:s', time()));
-        $post->setUser($session->get('user'));
-        $post->setImage($request->files->get("file"));
+            $post->setTitle($request->get('title'));
+            $post->setBody(preg_replace('#<script(.*?)>(.*?)</script>#is', '', $request->get('body')));
+            $post->setCreatedAt(date('Y-m-d G:i:s', time()));
+            $post->setUser($session->get('user'));
+            $post->setImage($request->files->get("file"));
+            $id = (int)$this->postsService->savePost($post);
+            return $app->redirect('/posts/' . $id);
+        }
 
-        dump($post);
+        return $app['twig']->render('post_form.twig');
 
-        $id = (int)$this->postsService->savePost($post);
-
-        return $app->redirect('/posts/' . $id);
     }
 
     public function get_user_posts(Application $app, Request $request)
@@ -125,11 +115,11 @@ class PostsController
 
         $count = (int)$this->postsService->getPostsByUserIdSize($user_id)["count"];
         $pages = (int)($count / $this->postsService::LIMIT_POSTS) + 1;
-
+        dump($pages);
         return $app['twig']->render('posts.twig', array(
             'posts' => $posts,
             'count' => $count,
-            'pages' => $pages - 1,
+            'pages' => $pages,
             'users_post' => true,
             'current_page' => $page
         ));
