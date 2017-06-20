@@ -1,6 +1,7 @@
 {% extends "base.twig" %}
 {% block content %}
     {{ dump(result) }}
+    {{ dump(errors) }}
     <form action="/registration" method="post" enctype="multipart/form-data">
         <input name="email" type="email" placeholder="email">
         <input name="password" type="password" placeholder="pass">

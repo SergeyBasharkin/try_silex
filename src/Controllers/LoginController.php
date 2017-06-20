@@ -15,6 +15,7 @@ use Services\Impls\UserService;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Validators\FormValidator;
 
 class LoginController
 {
@@ -35,31 +36,30 @@ class LoginController
         return $app["twig"]->render("login.twig", array());
     }
 
+    public function logout(Application $app){
+        /** @var Session $session */
+        $session = $app["session"];
+        $session->remove("user");
+    }
     public function login(Application $app, Request $request)
     {
-        /** @var string $login */
-        $login = $request->get("login");
 
-        /** @var string $password */
-        $password = $request->get("password");
+        /** @var FormValidator $validator */
+        $validator = $app['validator'];
+
 
         /** @var User $user */
-        $user = $this->userService->load_user_by_username($login);
+        $user = $this->userService->load_user_by_username($request->get('login'));
+        dump($user);
 
-        $errors = [];
-        if ($user === null) {
-            $errors[] = "user not found";
-        } elseif ($login !== $user->getEmail() && $password!== $user->getPassword()) {
-            $errors[] = "bad credentials";
-        }
-
+        $errors = $validator->validateLoginForm($user, $request);
         if (empty($errors)) {
 
             /** @var Session $session */
             $session = $app["session"];
             $session->set("user", $user);
 
-            return $app->redirect('/posts');
+            return $app->redirect('/welcome');
         }
 
         return $app["twig"]->render("login.twig", array(

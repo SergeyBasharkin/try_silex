@@ -11,6 +11,7 @@ namespace Providers;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Repositories\Impls\PostsRepository;
 use Repositories\Impls\UserRepository;
 use Repositories\Impls\WelcomeRepository;
 
@@ -31,8 +32,13 @@ class RepositoryProvider implements ServiceProviderInterface
         $app["repositories.welcome"] = function () use ($app) {
             return new WelcomeRepository($app["db"]);
         };
+
         $app["repositories.user"] = function () use ($app) {
             return new UserRepository($app["db"]);
+        };
+
+        $app["repositories.posts"] = function () use ($app) {
+            return new PostsRepository($app["db"]);
         };
     }
 }

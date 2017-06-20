@@ -25,7 +25,7 @@ class UserService extends Service
         $user = new User();
         $user->setId($row["id"]);
         $user->setEmail($row["email"]);
-        $user->setAvatar($row["avatarUrl"]);
+        $user->setAvatar($row["avatar"]);
         $user->setPassword($row["password"]);
         return $user;
     }
@@ -35,10 +35,10 @@ class UserService extends Service
         /* @var $rep UserRepository */
         $rep = $this->defaultRepository;
 
-        $errors = [];
-
         $filePath = uniqid()."_".$user->getAvatar()->getClientOriginalName();
-        if ($user->getAvatar()->move(__DIR__.'/../../../public/upload', $filePath )) $user->setAvatar($filePath);
+        if ($user->getAvatar()->move(__DIR__.'/../../../public/upload', $filePath )){
+            $user->setAvatar($filePath);
+        }
 
         return $rep->saveUser($user);
     }

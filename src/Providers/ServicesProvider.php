@@ -4,6 +4,7 @@ namespace Providers;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Services\Impls\PostsService;
 use Services\Impls\UserService;
 use Services\Impls\WelcomeService;
 
@@ -33,6 +34,9 @@ class ServicesProvider implements ServiceProviderInterface
 
         $app["services.welcome"] = function () use ($app) {
             return new WelcomeService($app, $app["repositories.welcome"]);
+        };
+        $app["services.posts"] = function () use ($app) {
+            return new PostsService($app, $app["repositories.posts"]);
         };
     }
 }
