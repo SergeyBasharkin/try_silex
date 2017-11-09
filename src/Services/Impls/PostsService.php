@@ -21,7 +21,7 @@ use Services\Service;
  */
 class PostsService extends Service
 {
-    const LIMIT_POSTS = 20;
+    const LIMIT_POSTS = 3;
 
     public function getAllProposals($page = 1)
     {

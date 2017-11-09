@@ -34,11 +34,13 @@ class UserService extends Service
     {
         /* @var $rep UserRepository */
         $rep = $this->defaultRepository;
-
-        $filePath = uniqid()."_".$user->getAvatar()->getClientOriginalName();
-        if ($user->getAvatar()->move(__DIR__.'/../../../public/upload', $filePath )){
-            $user->setAvatar($filePath);
+        if ($user->getAvatar() !== null) {
+            $filePath = uniqid() . "_" . $user->getAvatar()->getClientOriginalName();
+            if ($user->getAvatar()->move(__DIR__ . '/../../../public/upload', $filePath)) {
+                $user->setAvatar($filePath);
+            }
         }
+
 
         return $rep->saveUser($user);
     }

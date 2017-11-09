@@ -15,7 +15,7 @@
                                 {% if post.image == null %}
                                     <img src="/upload/index.png">
                                 {% else %}
-                                    <img src="/upload/{{ asset(post.image) }}">
+                                    <img src="/upload/{{ post.image}}">
                                 {% endif %}
                                 <span class="card-title">{{ post.title }}</span>
                             </div>

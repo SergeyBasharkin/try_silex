@@ -52,12 +52,14 @@ class PostsController
         $count = (int)$this->postsService->getAllPostsSize()["count"];
         $pages = (int)($count / $this->postsService::LIMIT_POSTS) + 1;
 
+        dump($app['session']->get('user'));
         return $app['twig']->render('posts.twig', array(
             'posts' => $posts,
             'count' => $count,
             'pages' => $pages,
             'users_post' => false,
-            'current_page' => $page
+            'current_page' => $page,
+            'current_user' => $app['session']->get('user')
         ));
     }
 
@@ -71,11 +73,11 @@ class PostsController
         $post = $this->postsService->getPostById($id);
 
         $comments = $this->commentsService->getAllCommentsByPost($id);
-        dump($comments);
 
         return $app['twig']->render('post.twig', array(
             "post" => $post,
-            "comments" => $comments
+            "comments" => $comments,
+            'current_user' => $app['session']->get('user')
         ));
     }
 
@@ -115,13 +117,13 @@ class PostsController
 
         $count = (int)$this->postsService->getPostsByUserIdSize($user_id)["count"];
         $pages = (int)($count / $this->postsService::LIMIT_POSTS) + 1;
-        dump($pages);
         return $app['twig']->render('posts.twig', array(
             'posts' => $posts,
             'count' => $count,
             'pages' => $pages,
             'users_post' => true,
-            'current_page' => $page
+            'current_page' => $page,
+            'current_user' => $app['session']->get('user')
         ));
 
     }

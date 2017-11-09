@@ -1,0 +1,23 @@
+[
+  {
+    "class": "Controllers\\LoginController",
+    "actions": [
+      {
+        "path": "/login",
+        "method": "login",
+        "requestMethod": "post"
+      },
+      {
+        "path": "/login",
+        "method": "login_get",
+        "requestMethod": "get"
+      },
+      {
+        "path": "/logout",
+        "method": "logout",
+        "requestMethod": "get"
+      }
+    ],
+    "service": "services.user"
+  }
+]

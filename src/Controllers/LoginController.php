@@ -9,7 +9,6 @@
 namespace Controllers;
 
 
-use Doctrine\DBAL\Query\QueryBuilder;
 use Models\User;
 use Services\Impls\UserService;
 use Silex\Application;
@@ -31,28 +30,19 @@ class LoginController
     }
 
 
-    public function login_get(Application $app)
+    public function login_get(Application $app, Request $request)
     {
         return $app["twig"]->render("login.twig", array());
     }
 
-    public function logout(Application $app){
-        /** @var Session $session */
-        $session = $app["session"];
-        $session->remove("user");
-        $app["twig"]->render("login.twig", array());
-
-    }
     public function login(Application $app, Request $request)
     {
 
         /** @var FormValidator $validator */
         $validator = $app['validator'];
 
-
         /** @var User $user */
         $user = $this->userService->load_user_by_username($request->get('login'));
-
         $errors = $validator->validateLoginForm($user, $request);
         if (empty($errors)) {
 
@@ -60,12 +50,19 @@ class LoginController
             $session = $app["session"];
             $session->set("user", $user);
 
-            return $app->redirect('/welcome');
+            return $app->redirect('/');
         }
 
         return $app["twig"]->render("login.twig", array(
             "errors" => $errors
         ));
+    }
+
+    public function logout(Application $app){
+        /** @var Session $session */
+        $session = $app["session"];
+        $session->remove("user");
+        return $app["twig"]->render("login.twig", array());
     }
 
 }

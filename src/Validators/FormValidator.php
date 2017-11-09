@@ -18,9 +18,6 @@ class FormValidator
     public function validateRegistrationForm(Request $request)
     {
         $errors = [];
-        dump($request->get("password"));
-        dump($request->get("confirm_password"));
-        dump($request->files->get("file")->getSize());
         if ($request->get("password") !== $request->get("confirm_password")) {
             $errors[] = "passwords invalid";
         }
@@ -29,10 +26,10 @@ class FormValidator
             $errors[] = "email invalid";
         }
 
-        if ($request->files->get("file") != null && $request->files->get("file")->getSize() > 20000000) {
-            $errors[] = "file error";
-        }
-
+//        if ($request->files->get("file") == null || $request->files->get("file")->getSize() > 20000000) {
+//            $errors[] = "file error";
+//        }
+        dump($errors);
         return $errors;
     }
 

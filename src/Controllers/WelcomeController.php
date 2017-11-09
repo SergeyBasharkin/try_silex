@@ -27,8 +27,8 @@ class WelcomeController
     public function welcome(Application $app, Request $request)
     {
         $session = $app["session"];
-
-
+        dump('hello');
+        dump($session->get("user"));
         return $app["twig"]->render("welcome.twig", array(
             "test" => $session->get("user"),
 

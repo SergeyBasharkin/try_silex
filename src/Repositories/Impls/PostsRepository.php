@@ -33,7 +33,7 @@ class PostsRepository extends Repository
             ->select('p.*, u.id as user_id, u.email, u.avatar')
             ->from('posts', 'p')
             ->join('p', 'users', 'u', 'p.user_id = u.id')
-            ->orderBy('created_at')
+            ->orderBy('p.created_at', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
@@ -94,7 +94,7 @@ class PostsRepository extends Repository
             ->from('posts', 'p')
             ->join('p', 'users', 'u', 'p.user_id = u.id')
             ->where('p.user_id = ?')
-            ->orderBy('created_at')
+            ->orderBy('p.created_at', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->setParameter(0, $user_id);
